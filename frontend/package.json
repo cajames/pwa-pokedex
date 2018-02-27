@@ -18,7 +18,9 @@
     "vue": "^2.5.11",
     "vue-feather-icons": "^4.5.0",
     "vue-property-decorator": "^6.0.0",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
+    "vuex-class": "^0.3.0"
   },
   "browserslist": [
     "> 1%",

@@ -98,10 +98,7 @@ export default class DiscoverPage extends Vue {
                 </div>
                 <span class="text-white text-xl mb-4">What's this pokemon's name?</span>
                 <div class="flex flex-wrap justify-around p-4">
-                    <button class="p-4 bg-red text-white w-2/5 shadow mx-2 mb-6 rounded">Pokemon 1</button>
-                    <button class="p-4 bg-red text-white w-2/5 shadow mx-2 mb-6 rounded">Pokemon 1</button>
-                    <button class="p-4 bg-red text-white w-2/5 shadow mx-2 mb-6 rounded">Pokemon 1</button>
-                    <button class="p-4 bg-red text-white w-2/5 shadow mx-2 mb-6 rounded">Pokemon 1</button>
+                    <button v-for="i in 4" :key="i" class="p-4 bg-red text-white w-2/5 shadow mx-2 mb-6 rounded">Pokemon 1</button>
                 </div>
             </div>
 
@@ -119,7 +116,7 @@ export default class DiscoverPage extends Vue {
 
             <!-- Fled -->
             <div v-else-if="state === 'fled'" class="pt-12 p-8 h-screen flex flex-col h-64 justify-center items-center text-white">
-                <h3 class="mb-4">Snap! It got away.</h3>
+                <h3 class="mb-4">Dam! It got away.</h3>
                 <button class="p-4 rounded bg-red text-white shadow" @click="reset">Try again?</button>
             </div>
         </div>

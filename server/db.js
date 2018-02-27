@@ -7,7 +7,7 @@ module.exports = () => {
 				email: 'chris@webglowit.net'
 			}
 		],
-		discoveries: [
+		sightings: [
 			{
 				id: 1,
 				animalId: 4,

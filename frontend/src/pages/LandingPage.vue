@@ -1,10 +1,10 @@
 <script>
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Action } from 'vuex-class'
 
 @Component
 export default class LandingPage extends Vue {
-  @State('message') message
+  @Action('login') login
 
   user = {
     username: '',
@@ -13,8 +13,7 @@ export default class LandingPage extends Vue {
 
   async submitUsername() {
     // create or find user
-    // go to dash
-    this.$router.push('/dash')
+    this.login(this.user)
   }
 
 }

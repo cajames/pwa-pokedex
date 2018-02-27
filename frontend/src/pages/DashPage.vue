@@ -29,7 +29,7 @@ export default class DashPage extends Vue {
     <div>
         <the-header></the-header>
         <div class="p-6"></div>
-        <div class="container mx-auto h-screen p-8 flex flex-wrap justify-around">
+        <div class="container mx-auto p-8 flex flex-wrap justify-around">
             <tile @click.native="goToDiscover">
                 <camera-icon class="w-1/2 mb-2"></camera-icon>
                 <span class="text-xl">Discover</span>

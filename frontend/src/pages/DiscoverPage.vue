@@ -30,7 +30,7 @@ export default class DiscoverPage extends Vue {
     }
 
     getPokemonQuiz() {
-
+        console.log('get the quiz')
     }
 
     pokemonFled() {
@@ -86,12 +86,13 @@ export default class DiscoverPage extends Vue {
 
             <!-- Message -->
             <div v-if="readyTimer !== null" class="flex flex-col pt-12 h-screen justify-center items-center">
+                <span class="text-xl text-white mb-4">Get ready...</span>
                 <span class="text-2xl text-white font-bold">{{ readyTimer }}</span>
             </div>
 
             <!-- Quiz -->
             <div v-else-if="seenTimeLeft !== null && seenTimeLeft > 0" class="pt-12 p-8 h-screen flex flex-col justify-center items-center">
-                <span class="text-white mb-8 text-xl">Be quick! Pokémon will flee in {{ seenTimeLeft }}...</span>
+                <span class="text-white mb-8 text-xl">Be quick! Pokémon will flee in <span class="font-bold">{{ seenTimeLeft }}</span>...</span>
                 <div class="bg-red shadow rounded p-4 mb-8">
                     <img src="http://via.placeholder.com/96x96" alt="Pokemon Image">
                 </div>
@@ -107,19 +108,19 @@ export default class DiscoverPage extends Vue {
             <!-- Success -->
             <div v-else-if="state === 'correct'" class="pt-12 p-8 h-screen flex flex-col h-64 justify-center items-center text-white">
                 <h3>Correct!</h3>
-                <button class="p-4 rounded bg-red text-white shadow focus:bg-red-darker">Try another?</button>
+                <button class="p-4 rounded bg-red text-white shadow" @click="reset">Try another?</button>
             </div>
 
             <!-- Failed -->
             <div v-else-if="state === 'wrong'" class="pt-12 p-8 h-screen flex flex-col h-64 justify-center items-center text-white">
                 <h3>Nope... Got it wrong.</h3>
-                <button class="p-4 rounded bg-red text-white shadow focus:bg-red-darker">Try again?</button>
+                <button class="p-4 rounded bg-red text-white shadow" @click="reset">Try again?</button>
             </div>
 
             <!-- Fled -->
             <div v-else-if="state === 'fled'" class="pt-12 p-8 h-screen flex flex-col h-64 justify-center items-center text-white">
                 <h3 class="mb-4">Snap! It got away.</h3>
-                <button class="p-4 rounded bg-red text-white shadow focus:bg-red-darker">Try again?</button>
+                <button class="p-4 rounded bg-red text-white shadow" @click="reset">Try again?</button>
             </div>
         </div>
     </div>

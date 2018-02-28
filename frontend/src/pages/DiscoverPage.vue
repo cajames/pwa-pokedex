@@ -12,7 +12,9 @@ import TheHeader from '../components/TheHeader.vue'
 export default class DiscoverPage extends Vue {
 
     @Action('getQuiz') getQuiz
+    @Action('addNewUserSeenPokemon') addNewSeenPokemon
     @State('currentQuiz') quiz
+    @State('currentUser') user
 
     readyTimer = null
     seenTimeLeft = null
@@ -39,6 +41,11 @@ export default class DiscoverPage extends Vue {
     }
     pokemonGuessed() {
         this.clearSeenTimer()
+        const payload = {
+            userId: this.user.id,
+            pokemonId: this.quiz.question.id,
+        }
+        this.addNewSeenPokemon(payload)
         this.state = 'correct'
     }
     pokemonWrong() {
@@ -46,12 +53,16 @@ export default class DiscoverPage extends Vue {
         this.state = 'wrong'
     }
 
-    selectAnswer(index) {
-        debugger
+    selectAnswer(pokemonId) {
+        if (this.quiz.question.id === pokemonId) {
+            this.pokemonGuessed()
+        } else {
+            this.pokemonWrong()
+        }
     }
 
     clearSeenTimer() {
-        clearInterval(this.seentimer)
+        clearInterval(this.seenTimer)
         this.seenTimeLeft = null
     }
 
@@ -109,20 +120,24 @@ export default class DiscoverPage extends Vue {
 
             <!-- Success -->
             <div v-else-if="state === 'correct'" class="pt-12 p-8 h-screen flex flex-col h-64 justify-center items-center text-white">
-                <h3>Correct!</h3>
+                <h3 class="mb-4">Correct!</h3>
+                <div class="bg-red shadow rounded p-4 mb-4">
+                    <img :src="quiz.question.image" :alt="quiz.question.name">
+                </div>
+                <span class="mb-8">You've discovered {{ quiz.question.name | capitalize }}!</span>
                 <button class="p-4 rounded bg-red text-white shadow" @click="reset">Try another?</button>
             </div>
 
             <!-- Failed -->
             <div v-else-if="state === 'wrong'" class="pt-12 p-8 h-screen flex flex-col h-64 justify-center items-center text-white">
-                <h3>Nope... Got it wrong.</h3>
-                <button class="p-4 rounded bg-red text-white shadow" @click="reset">Try again?</button>
+                <h3 class="mb-4">Nope... That wasn't it.</h3>
+                <button class="p-4 rounded bg-red text-white shadow" @click="reset">Try another?</button>
             </div>
 
             <!-- Fled -->
             <div v-else-if="state === 'fled'" class="pt-12 p-8 h-screen flex flex-col h-64 justify-center items-center text-white">
                 <h3 class="mb-4">Dam! It got away.</h3>
-                <button class="p-4 rounded bg-red text-white shadow mb-4" @click="reset">Try again?</button>
+                <button class="p-4 rounded bg-red text-white shadow mb-4" @click="reset">Try another?</button>
             </div>
         </div>
     </div>
@@ -134,5 +149,11 @@ export default class DiscoverPage extends Vue {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+
+.outline-image {
+
+    filter: contrast(0%)
+
 }
 </style>

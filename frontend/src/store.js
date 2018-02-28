@@ -112,9 +112,20 @@ const actions = {
         }
     },
     async addNewUserSeenPokemon({ state, commit, dispatch }, payload) {
+
         try {
+
+            const pokemonIds = state.allPokemon.map(item => item.id)
+            if (!pokemonIds.includes(payload.pokemonId)) {
+                throw 'Incorrect pokemon id.'
+            }
+            if (payload.userId !== state.currentUser.id) {
+                throw 'Mismatched User.'
+            }
+
             await client.post(`/sightings`, payload)
-            await dispatch('getUserSeenPokemon')
+            await dispatch('getUserSeenPokemon', { userId: payload.userId })
+
         } catch (e) {
             throw 'Failed to add new user seen pokemon'
         }

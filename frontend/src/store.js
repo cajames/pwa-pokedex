@@ -18,6 +18,21 @@ const state = {
 }
 
 const getters = {
+
+    userSeenPokemon(state) {
+        if (!state.currentUser || state.seenPokemon.length === 0) {
+            return []
+        }
+        const seenPokemonEntries = state.seenPokemon
+        const allPokemon = state.allPokemon
+
+        const seenIds = seenPokemonEntries.map(pokemon => pokemon.pokemonId)
+        const seenPokemon = allPokemon.filter(pokemon => {
+            return seenIds.includes(pokemon.id)
+        })
+        return seenPokemon
+    }
+
 }
 
 const mutations = {

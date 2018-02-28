@@ -1,5 +1,6 @@
 <script>
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 
 import TheHeader from '../components/TheHeader.vue'
 import Tile from '../components/Tile.vue'
@@ -11,6 +12,7 @@ import Tile from '../components/Tile.vue'
     }
 })
 export default class SeenPage extends Vue {
+    @Getter('userSeenPokemon') userSeenPokemon
 }
 </script>
 
@@ -21,9 +23,9 @@ export default class SeenPage extends Vue {
             <h2 class="text-white my-6 text-center">Indexed Pokémon</h2>
 
             <div class="flex flex-wrap">
-                <div v-for="i in 10" :key="i" class="flex flex-col justify-center items-center bg-red rounded p-4 shadow mb-4 mx-4 w-2/5">
-                    <img class="mb-4" src="http://via.placeholder.com/96x96" alt="Pokemon Image">
-                    <span class="text-white">Pokemon 1</span>
+                <div v-for="pokemon in userSeenPokemon" :key="pokemon.id" class="flex flex-col justify-center items-center bg-red rounded p-4 shadow mb-4 mx-4 w-2/5">
+                    <img class="mb-4" :src="pokemon.image" :alt="pokemon.name">
+                    <span class="text-white">{{ pokemon.name | capitalize }}</span>
                 </div>
             </div>
         </div>

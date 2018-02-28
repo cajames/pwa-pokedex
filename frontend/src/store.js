@@ -20,6 +20,7 @@ const state = {
     pendingUpdates: [],
     allPokemon: [],
     seenPokemon: [],
+    userListing: [],
 }
 
 const getters = {
@@ -63,6 +64,9 @@ const mutations = {
     },
     setPendingUpdates(state, payload) {
         state.pendingUpdates = payload
+    },
+    setUserListing(state, payload) {
+        state.userListing = payload
     }
 }
 
@@ -270,6 +274,28 @@ const actions = {
             return client.get(image)
         })
         return await Promise.all(promises)
+    },
+
+    async getUserListing({ state, commit }) {
+        try {
+            const { data } = await client.get('/sightings?_expand=user')
+            const userGroups = _.groupBy(data, 'userId')
+
+            const mapped = Object.entries(userGroups).map(([key, value]) => {
+                const first = value[0]
+                return {
+                    username: first.user.username,
+                    count: value.length
+                }
+            })
+
+            const sorted = _.sortBy(mapped, ['count', 'username'])
+
+            commit('setUserListing', sorted)
+
+        } catch (error) {
+            throw error
+        }
     }
 
 }

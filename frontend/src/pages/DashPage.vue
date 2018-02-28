@@ -35,6 +35,9 @@ export default class DashPage extends Vue {
     goToSeen() {
         this.$router.push('/seen')
     }
+    goToList() {
+        this.$router.push('/list')
+    }
 }
 </script>
 
@@ -50,6 +53,10 @@ export default class DashPage extends Vue {
             <tile class="mb-4" @click.native="goToSeen">
                 <layers-icon class="w-1/2 mb-2"></layers-icon>
                 <span class="text-xl">Seen</span>
+            </tile>
+            <tile class="mb-4" @click.native="goToList">
+                <users-icon class="w-1/2 mb-2"></users-icon>
+                <span class="text-xl">Leaders</span>
             </tile>
             <tile class="mb-4" v-if="showPending" @click.native="uploadPending">
                 <upload-cloud-icon class="w-1/2 mb-2"></upload-cloud-icon>

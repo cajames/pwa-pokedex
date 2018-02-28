@@ -8,6 +8,7 @@ import LandingPage from './pages/LandingPage.vue'
 import DashPage from './pages/DashPage.vue'
 import DiscoverPage from './pages/DiscoverPage.vue'
 import SeenPage from './pages/SeenPage.vue'
+import ListingPage from './pages/ListingPage.vue'
 
 const routes = [
     { 
@@ -23,6 +24,7 @@ const routes = [
     { path: '/dash', component: DashPage },
     { path: '/discover', component: DiscoverPage },
     { path: '/seen', component: SeenPage },
+    { path: '/list', component: ListingPage },
 ]
 
 export const router = new VueRouter({

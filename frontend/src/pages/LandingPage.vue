@@ -1,10 +1,11 @@
 <script>
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Action } from 'vuex-class'
+import { Vue, Component, Watch } from 'vue-property-decorator'
+import { State, Action } from 'vuex-class'
 
 @Component
 export default class LandingPage extends Vue {
   @Action('login') login
+  @State('currentUser') currentUser
 
   user = {
     username: '',
@@ -14,6 +15,17 @@ export default class LandingPage extends Vue {
   async submitUsername() {
     // create or find user
     this.login(this.user)
+  }
+
+  mounted() {
+    console.log('Current User', this.currentUser)
+  }
+
+  @Watch('currentUser')
+  onCurrentUserChange(newVal, oldVal) {
+    if (newVal) {
+      this.$router.push('/dash')
+    }
   }
 
 }

@@ -6,6 +6,8 @@ import _ from 'lodash'
 import { router } from './router'
 import { API_URL } from './config'
 
+import { dbSet, dbGet } from './idb'
+
 const client = axios.create({
     baseURL: API_URL
 })
@@ -43,6 +45,7 @@ const mutations = {
     },
     clearCurrentUser(state) {
         state.currentUser = null
+        dbSet('currentUser', null)
     },
     setAllPokemon(state, payload) {
         state.allPokemon = payload
@@ -52,6 +55,7 @@ const mutations = {
     },
     clearUserSeenPokemon(state) {
         state.seenPokemon = []
+        dbSet('seenPokemon', [])
     },
     setCurrentQuiz(state, payload) {
         state.currentQuiz = payload
@@ -63,10 +67,16 @@ const actions = {
     // Find user or add user
     async login({ commit, dispatch }, payload) {
         try {
+
+            if (!payload.username) {
+                throw 'No username'
+            }
+
             const { data } = await client.get(`/users?username=${payload.username}`)
             if (data.length > 0) {
                 const user = data[0]
                 commit('setCurrentUser', user)
+                await dbSet('currentUser', user)
                 dispatch('getUserSeenPokemon', { userId: user.id })
             } else {
                 await dispatch('createUser', payload)
@@ -97,6 +107,7 @@ const actions = {
         try {
             const { data } = await client.get('/pokemon')
             commit('setAllPokemon', data)
+            await dbSet('allPokemon', data)
         } catch (e) {
             throw 'Failed to get all Pokemon'
         }
@@ -107,6 +118,7 @@ const actions = {
         try {
             const { data } = await client.get(`/sightings?userId=${payload.userId}`)
             commit('setUserSeenPokemon', data)
+            await dbSet('seenPokemon', data)
         } catch (e) {
             throw 'Failed to get user seen pokemon'
         }
@@ -161,6 +173,38 @@ const actions = {
             ])
             commit('setCurrentQuiz', { question, quizSample })
         }
+    },
+
+    async initStore({ state, commit }) {
+
+        try {
+            const allPokemon = await dbGet('allPokemon')
+            if (allPokemon) {
+                commit('setAllPokemon', allPokemon)
+            }
+        } catch (e) {
+            console.error(e)
+        }
+
+
+        try {
+            const user = await dbGet('currentUser')
+            if (user) {
+                commit('setCurrentUser', user)
+            }
+        } catch (e) {
+            console.error(e)
+        }
+
+        try {
+            const seenPokemon = await dbGet('seenPokemon')
+            if (seenPokemon) {
+                commit('setUserSeenPokemon', seenPokemon)
+            }
+        } catch (e) {
+            console.error(e)
+        }
+
     }
 
 }

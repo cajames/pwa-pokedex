@@ -1,13 +1,20 @@
 <script>
 import { Vue, Component } from 'vue-property-decorator'
-import { Action } from 'vuex-class'
+import { State, Action } from 'vuex-class'
 
 @Component
 export default class App extends Vue {
   @Action('getAllPokemonData') getAllPokemonData
+  @Action('initStore') initStore
+  @State('allPokemon') allPokemon
 
   created() {
-    this.getAllPokemonData()
+    this.initStore()
+      .then(() => {
+        if (this.allPokemon) {
+          this.getAllPokemonData()
+        }
+      })
   }
 
 }

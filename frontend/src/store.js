@@ -47,6 +47,7 @@ const actions = {
             if (data.length > 0) {
                 const user = data[0]
                 commit('setCurrentUser', user)
+                dispatch('getUserSeenPokemon', { userId: user.id })
             } else {
                 await dispatch('createUser', payload)
             }
@@ -55,10 +56,11 @@ const actions = {
             throw 'Failed to log in.'
         }
     },
-    async createUser({ commit }, payload) {
+    async createUser({ commit, dispatch }, payload) {
         try {
             const { data } = await client.post(`/users`, payload)
             commit('setCurrentUser', data)
+            dispatch('getUserSeenPokemon', { userId: data.id })
         } catch (e) {
             throw 'Failed to create user'
         }
@@ -66,12 +68,14 @@ const actions = {
     async logout({ commit }) {
         // Clear all local user data
         commit('clearCurrentUser')
+        commit('clearUserSeenPokemon')
+        router.push('/')
     },
 
     // Pokemon
     async getAllPokemonData({ commit }) {
         try {
-            const { data } = await client.get('/animals')
+            const { data } = await client.get('/pokemon')
             commit('setAllPokemon', data)
         } catch (e) {
             throw 'Failed to get all Pokemon'
@@ -94,8 +98,7 @@ const actions = {
         } catch (e) {
             throw 'Failed to add new user seen pokemon'
         }
-    }
-
+    },
 
 }
 

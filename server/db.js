@@ -10,11 +10,11 @@ module.exports = () => {
 		sightings: [
 			{
 				id: 1,
-				animalId: 4,
+				pokemonId: 4,
 				userId: 1
 			}
 		],
-		animals: getPokemon()
+		pokemon: getPokemon()
 	}
 }
 

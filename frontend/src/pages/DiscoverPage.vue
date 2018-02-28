@@ -117,7 +117,7 @@ export default class DiscoverPage extends Vue {
             <!-- Fled -->
             <div v-else-if="state === 'fled'" class="pt-12 p-8 h-screen flex flex-col h-64 justify-center items-center text-white">
                 <h3 class="mb-4">Dam! It got away.</h3>
-                <button class="p-4 rounded bg-red text-white shadow" @click="reset">Try again?</button>
+                <button class="p-4 rounded bg-red text-white shadow mb-4" @click="reset">Try again?</button>
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 <script>
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Action, State } from 'vuex-class'
 
 import TheHeader from '../components/TheHeader.vue'
 
@@ -9,6 +10,10 @@ import TheHeader from '../components/TheHeader.vue'
     }
 })
 export default class DiscoverPage extends Vue {
+
+    @Action('getQuiz') getQuiz
+    @State('currentQuiz') quiz
+
     readyTimer = null
     seenTimeLeft = null
     seenTimer = null
@@ -20,17 +25,13 @@ export default class DiscoverPage extends Vue {
 
     created() {
         this.startReadyCounter()
+        this.getQuiz()
     }
 
     reset() {
         this.state = null
-        this.getPokemonQuiz()
-        // Get a new pokemon
+        this.getQuiz()
         this.startReadyCounter()
-    }
-
-    getPokemonQuiz() {
-        console.log('get the quiz')
     }
 
     pokemonFled() {
@@ -43,6 +44,10 @@ export default class DiscoverPage extends Vue {
     pokemonWrong() {
         this.clearSeenTimer()
         this.state = 'wrong'
+    }
+
+    selectAnswer(index) {
+        debugger
     }
 
     clearSeenTimer() {
@@ -94,11 +99,11 @@ export default class DiscoverPage extends Vue {
             <div v-else-if="seenTimeLeft !== null && seenTimeLeft > 0" class="pt-12 p-8 h-screen flex flex-col justify-center items-center">
                 <span class="text-white mb-8 text-xl">Be quick! Pokémon will flee in <span class="font-bold">{{ seenTimeLeft }}</span>...</span>
                 <div class="bg-red shadow rounded p-4 mb-8">
-                    <img src="http://via.placeholder.com/96x96" alt="Pokemon Image">
+                    <img class="outline-image" :src="quiz.question.image" alt="Question Image">
                 </div>
-                <span class="text-white text-xl mb-4">What's this pokemon's name?</span>
+                <span class="text-white text-xl mb-4">What's this pokémon's name?</span>
                 <div class="flex flex-wrap justify-around p-4">
-                    <button v-for="i in 4" :key="i" class="p-4 bg-red text-white w-2/5 shadow mx-2 mb-6 rounded">Pokemon 1</button>
+                    <button v-for="item in quiz.quizSample" :key="item.id" class="p-4 bg-red text-white w-2/5 shadow mx-2 mb-6 rounded" @click="selectAnswer(item.id)">{{ item.name | capitalize }}</button>
                 </div>
             </div>
 

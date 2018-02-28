@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import _ from 'lodash'
 
 import { router } from './router'
 import { API_URL } from './config'
@@ -13,6 +14,7 @@ Vue.use(Vuex)
 
 const state = {
     currentUser: null,
+    currentQuiz: null,
     allPokemon: [],
     seenPokemon: [],
 }
@@ -51,6 +53,9 @@ const mutations = {
     clearUserSeenPokemon(state) {
         state.seenPokemon = []
     },
+    setCurrentQuiz(state, payload) {
+        state.currentQuiz = payload
+    }
 }
 
 const actions = {
@@ -114,6 +119,38 @@ const actions = {
             throw 'Failed to add new user seen pokemon'
         }
     },
+
+    async getQuiz({ state, commit, getters }) {
+
+        // Find at least 4 pokemon you don't know
+        const seenPokemon = getters.userSeenPokemon
+        const allPokemon = state.allPokemon
+        const seenPokemonIds = seenPokemon.map(item => item.id)
+        const unseenPokemon = allPokemon.filter(pokemon => {
+            return !seenPokemonIds.includes(pokemon.id)
+        })
+
+        const unseenSize = unseenPokemon.length
+
+        if (unseenSize === 0) {
+            commit('setCurrentQuiz', null )
+            return null
+        }
+
+        // if less than 4 unseen, add more samples
+        if (unseenSize >= 4) {
+            const quizSample = _.sampleSize(unseenPokemon, 4)
+            const question = _.sample(quizSample)
+            commit('setCurrentQuiz', { question, quizSample })
+        } else {
+            const question = _.sample(unseenPokemon)
+            const quizSample = _.shuffle([
+                ..._.sampleSize(unseenPokemon, unseenSize),
+                ..._.sampleSize(seenPokemon, 4 - unseenSize)
+            ])
+            commit('setCurrentQuiz', { question, quizSample })
+        }
+    }
 
 }
 

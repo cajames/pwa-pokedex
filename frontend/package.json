@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "idb-keyval": "^2.3.0",
+    "lodash": "^4.17.5",
     "serve": "^6.5.0",
     "tailwindcss": "^0.4.1",
     "vue": "^2.5.11",

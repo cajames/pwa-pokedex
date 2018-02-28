@@ -6,6 +6,7 @@ import { State, Action } from 'vuex-class'
 export default class App extends Vue {
   @Action('getAllPokemonData') getAllPokemonData
   @Action('initStore') initStore
+  @Action('loadPokemonImages') loadPokemonImages
   @State('allPokemon') allPokemon
 
   created() {
@@ -13,6 +14,7 @@ export default class App extends Vue {
       .then(() => {
         if (this.allPokemon) {
           this.getAllPokemonData()
+          this.loadPokemonImages()
         }
       })
   }

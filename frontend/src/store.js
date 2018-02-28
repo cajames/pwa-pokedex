@@ -186,9 +186,13 @@ const actions = {
 
     async addToPending({ state, commit }, payload) {
         try {
-            const pendingUpdates = await dbGet('pendingUpdates') || []
+            // const pendingUpdates = await dbGet('pendingUpdates') || []
+            const pendingUpdates = state.pendingUpdates
+            const seenPokemon = state.seenPokemon
+
             await dbSet('pendingUpdates', [...pendingUpdates, payload])
             commit('setPendingUpdates', [...pendingUpdates, payload])
+            commit('setUserSeenPokemon', [...seenPokemon, payload])
         } catch (e) {
             console.error(e)
             throw e
@@ -196,11 +200,12 @@ const actions = {
     },
     async removeFromPending({ state, commit }, payload) {
         try {
-            const pendingUpdates = await dbGet('pendingUpdates') || []
+            const pendingUpdates = state.pendingUpdates
+
             const remainingUpdates = pendingUpdates.filter(item => {
-                return item.userId === payload.userId &&
-                    item.pokemonId === payload.pokemonId
+                return item.pokemonId !== payload.pokemonId
             })
+
             await dbSet('pendingUpdates', remainingUpdates)
             commit('setPendingUpdates', remainingUpdates)
         } catch (e) {
@@ -210,7 +215,8 @@ const actions = {
     },
     async uploadPending({ state, commit }, payload) {
         try {
-            const pendingUpdates = await dbGet('pendingUpdates')
+            // const pendingUpdates = await dbGet('pendingUpdates') || []
+            const pendingUpdates = state.pendingUpdates
 
             const promises = pendingUpdates.map(payload => {
                 return client.post(`/sightings`, payload)
@@ -244,11 +250,24 @@ const actions = {
             const pendingUpdates = await dbGet('pendingUpdates')
             if (pendingUpdates) {
                 commit('setPendingUpdates', pendingUpdates)
+                if (seenPokemon) {
+                    commit('setUserSeenPokemon', [...seenPokemon, ...pendingUpdates])
+                }
             }
         } catch (e) {
             console.error(e)
         }
 
+    },
+
+    // This is insane...
+    async loadPokemonImages({ state }) {
+        const pokemon = state.allPokemon
+        const promises = pokemon.map(item => {
+            const image = item.image
+            return client.get(image)
+        })
+        return await Promise.all(promises)
     }
 
 }

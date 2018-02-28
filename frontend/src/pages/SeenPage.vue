@@ -29,8 +29,8 @@ export default class SeenPage extends Vue {
             <h2 v-if="hasSeen" class="text-white my-6 text-center">Discovered Pokémon</h2>
 
             <!-- Has Seen -->
-            <div v-if="hasSeen" class="flex flex-wrap">
-                <div v-for="pokemon in userSeenPokemon" :key="pokemon.id" class="flex flex-col justify-center items-center bg-red rounded p-4 shadow mb-4 mx-4 w-2/5">
+            <div v-if="hasSeen" class="flex flex-wrap justify-around">
+            <div v-for="pokemon in userSeenPokemon" :key="pokemon.id" class="flex flex-col justify-center items-center bg-red rounded p-4 shadow mb-4">
                     <img class="mb-4" :src="pokemon.image" :alt="pokemon.name">
                     <span class="text-white">{{ pokemon.name | capitalize }}</span>
                 </div>

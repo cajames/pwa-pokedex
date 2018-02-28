@@ -17,6 +17,7 @@ Vue.use(Vuex)
 const state = {
     currentUser: null,
     currentQuiz: null,
+    pendingUpdates: [],
     allPokemon: [],
     seenPokemon: [],
 }
@@ -59,6 +60,9 @@ const mutations = {
     },
     setCurrentQuiz(state, payload) {
         state.currentQuiz = payload
+    },
+    setPendingUpdates(state, payload) {
+        state.pendingUpdates = payload
     }
 }
 
@@ -99,6 +103,7 @@ const actions = {
         // Clear all local user data
         commit('clearCurrentUser')
         commit('clearUserSeenPokemon')
+        await dbSet('pendingUpdates', null)
         router.push('/')
     },
 
@@ -135,10 +140,14 @@ const actions = {
                 throw 'Mismatched User.'
             }
 
+            await dispatch('addToPending', payload)
             await client.post(`/sightings`, payload)
+            await dispatch('removeFromPending', payload)
+
             await dispatch('getUserSeenPokemon', { userId: payload.userId })
 
         } catch (e) {
+            console.error(e)
             throw 'Failed to add new user seen pokemon'
         }
     },
@@ -175,6 +184,45 @@ const actions = {
         }
     },
 
+    async addToPending({ state, commit }, payload) {
+        try {
+            const pendingUpdates = await dbGet('pendingUpdates') || []
+            await dbSet('pendingUpdates', [...pendingUpdates, payload])
+            commit('setPendingUpdates', [...pendingUpdates, payload])
+        } catch (e) {
+            console.error(e)
+            throw e
+        }
+    },
+    async removeFromPending({ state, commit }, payload) {
+        try {
+            const pendingUpdates = await dbGet('pendingUpdates') || []
+            const remainingUpdates = pendingUpdates.filter(item => {
+                return item.userId === payload.userId &&
+                    item.pokemonId === payload.pokemonId
+            })
+            await dbSet('pendingUpdates', remainingUpdates)
+            commit('setPendingUpdates', remainingUpdates)
+        } catch (e) {
+            console.error(e)
+            throw e
+        }
+    },
+    async uploadPending({ state, commit }, payload) {
+        try {
+            const pendingUpdates = await dbGet('pendingUpdates')
+
+            const promises = pendingUpdates.map(payload => {
+                return client.post(`/sightings`, payload)
+            })
+            await Promise.all(promises)
+            await dbSet('pendingUpdates', null)
+            commit('setPendingUpdates', null)
+        } catch(e) {
+            throw e
+        }
+    },
+
     async initStore({ state, commit }) {
 
         try {
@@ -182,24 +230,20 @@ const actions = {
             if (allPokemon) {
                 commit('setAllPokemon', allPokemon)
             }
-        } catch (e) {
-            console.error(e)
-        }
 
-
-        try {
             const user = await dbGet('currentUser')
             if (user) {
                 commit('setCurrentUser', user)
             }
-        } catch (e) {
-            console.error(e)
-        }
 
-        try {
             const seenPokemon = await dbGet('seenPokemon')
             if (seenPokemon) {
                 commit('setUserSeenPokemon', seenPokemon)
+            }
+
+            const pendingUpdates = await dbGet('pendingUpdates')
+            if (pendingUpdates) {
+                commit('setPendingUpdates', pendingUpdates)
             }
         } catch (e) {
             console.error(e)

@@ -11,7 +11,11 @@ export const dbSet = async (key, value) => {
 export const dbGet = async (key) => {
     try {
         const value = await idbKeyval.get(key)
-        return JSON.parse(value)
+        if (!value) {
+            return value
+        } else {
+            return JSON.parse(value)
+        }
     } catch (e) {
         throw `Could not get ${key} from idb.`
     }

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { store } from './store'
 
 Vue.use(VueRouter)
 
@@ -9,7 +10,16 @@ import DiscoverPage from './pages/DiscoverPage.vue'
 import SeenPage from './pages/SeenPage.vue'
 
 const routes = [
-    { path: '/', component: LandingPage },
+    { 
+        path: '/',
+        component: LandingPage,
+        beforeEnter: (to, from, next) => {
+            if (store.state.currentUser) {
+                next('/dash')
+            }
+            next()
+        }
+    },
     { path: '/dash', component: DashPage },
     { path: '/discover', component: DiscoverPage },
     { path: '/seen', component: SeenPage },

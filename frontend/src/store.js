@@ -213,16 +213,18 @@ const actions = {
             throw e
         }
     },
-    async uploadPending({ state, commit }, payload) {
+    async uploadPending({ state, commit, dispatch }, payload) {
         try {
             // const pendingUpdates = await dbGet('pendingUpdates') || []
             const pendingUpdates = state.pendingUpdates
+            const currentUser = state.currentUser
 
             const promises = pendingUpdates.map(payload => {
                 return client.post(`/sightings`, payload)
             })
             await Promise.all(promises)
             await dbSet('pendingUpdates', null)
+            dispatch('getUserSeenPokemon', { userId: currentUser.id })
             commit('setPendingUpdates', null)
         } catch(e) {
             throw e

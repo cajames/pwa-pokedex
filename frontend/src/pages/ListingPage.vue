@@ -16,6 +16,7 @@ export default class ListingPage extends Vue {
     timer = null
 
     created() {
+        this.getUserListing()
         this.timer = setInterval(() => {
             this.getUserListing()
         }, 10000)

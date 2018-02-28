@@ -289,8 +289,7 @@ const actions = {
                 }
             })
 
-            const sorted = _.sortBy(mapped, ['count', 'username'])
-
+            const sorted = _.reverse(_.sortBy(mapped, ['count', 'username']))
             commit('setUserListing', sorted)
 
         } catch (error) {

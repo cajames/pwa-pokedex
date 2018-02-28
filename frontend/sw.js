@@ -1,5 +1,5 @@
 
-const cacheName = 'static-v1'
+const cacheName = 'static-v5'
 const imageCache = 'pokestrites'
 
 // Store Files in Cache

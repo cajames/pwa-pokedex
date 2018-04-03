@@ -2,7 +2,7 @@ import idbKeyval from 'idb-keyval'
 
 export const dbSet = async (key, value) => {
     try {
-        await idbKeyval.set(key, JSON.stringify(value))
+        return await idbKeyval.set(key, JSON.stringify(value))
     } catch (e) {
         throw `Could not set [${key}, ${value}] from idb.`
     }

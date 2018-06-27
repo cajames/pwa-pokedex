@@ -23,8 +23,11 @@
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.0"
   },
+  "engines": {
+    "node": "10.x.x"
+  },
   "now": {
-    "alias": "pokedex.xn--wxa.wtf"
+    "alias": ["pokedex.xn--wxa.wtf", "pwa-pokedex.now.sh"]
   },
   "browserslist": [
     "> 1%",

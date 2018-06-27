@@ -1,2 +1,2 @@
-export const API_URL = 'http://localhost:3000'
-// export const API_URL = 'https://offline-server-hpvmykiplb.now.sh'
+// export const API_URL = 'http://localhost:3000'
+export const API_URL = 'https://offline-server-hpvmykiplb.now.sh'

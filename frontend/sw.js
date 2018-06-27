@@ -1,16 +1,14 @@
-const cacheName = 'static-v6';
-const imageCache = 'pokestrites';
+const cacheName = "static-v1";
+const imageCache = "pokestrites";
 
 // Store Files in Cache
 const storeFiles = () => {
   return caches.open(cacheName).then(cache => {
     return cache.addAll([
-      new Request('/index.html', {
-        credentials: 'same-origin',
-        redirect: 'follow',
-      }),
-      '/dist/icon.png',
-      '/dist/build.js',
+      "/index.html",
+      "/", // Alias of index.html
+      "/dist/icon.png",
+      "/dist/build.js"
     ]);
   });
 };
@@ -18,7 +16,7 @@ const storeFiles = () => {
 const clearOtherCaches = () => {
   return caches.keys().then(keys => {
     const deletes = keys.map(name => {
-      if (cacheName !== name && name.indexOf('static') === 0) {
+      if (cacheName !== name && name.indexOf("static") === 0) {
         return caches.delete(name);
       }
     });
@@ -51,28 +49,36 @@ const handleNetworkPokeImage = (event, fetchRequest) => {
   });
 };
 
+const loadAllPokemonImages = () => {
+  const sprites = Array(151)
+    .fill(0)
+    .map((_, index) => {
+      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index +
+        1}.png`;
+    });
+  return caches.open(imageCache).then(cache => {
+    return cache.addAll(sprites);
+  });
+};
+
 // Install Event
-self.addEventListener('install', event => {
-  console.log('Service worker install event -', cacheName);
+self.addEventListener("install", event => {
+  console.log("Service worker install event -", cacheName);
   event.waitUntil(storeFiles());
 });
 
-self.addEventListener('activate', event => {
-  console.log('Service worker activate event -', cacheName);
-  event.waitUntil(clearOtherCaches());
+self.addEventListener("activate", event => {
+  console.log("Service worker activate event -", cacheName);
+  event.waitUntil(Promise.all([loadAllPokemonImages(), clearOtherCaches()]))
 });
 
 // Fetch Event
-self.addEventListener('fetch', event => {
+self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
 
-  if (url.origin === 'https://raw.githubusercontent.com') {
+  if (url.origin === "https://raw.githubusercontent.com") {
+    console.log('Get Image: ', event.request)
     event.respondWith(handlePokeImage(event));
-    return;
-  }
-
-  if (url.origin === location.origin && url.pathname === '/') {
-    event.respondWith(caches.match('/index.html'));
     return;
   }
 

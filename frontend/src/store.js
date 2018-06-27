@@ -107,7 +107,7 @@ const actions = {
         // Clear all local user data
         commit('clearCurrentUser')
         commit('clearUserSeenPokemon')
-        await dbSet('pendingUpdates', null)
+        await dbSet('pendingUpdates', [])
         router.push('/')
     },
 
@@ -219,7 +219,6 @@ const actions = {
     },
     async uploadPending({ state, commit, dispatch }, payload) {
         try {
-            // const pendingUpdates = await dbGet('pendingUpdates') || []
             const pendingUpdates = state.pendingUpdates
             const currentUser = state.currentUser
 
@@ -227,9 +226,9 @@ const actions = {
                 return client.post(`/sightings`, payload)
             })
             await Promise.all(promises)
-            await dbSet('pendingUpdates', null)
+            await dbSet('pendingUpdates', [])
             dispatch('getUserSeenPokemon', { userId: currentUser.id })
-            commit('setPendingUpdates', null)
+            commit('setPendingUpdates', [])
         } catch(e) {
             throw e
         }

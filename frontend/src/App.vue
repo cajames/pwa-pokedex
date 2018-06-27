@@ -10,13 +10,14 @@ export default class App extends Vue {
   @State('allPokemon') allPokemon
 
   created() {
-    this.initStore()
-      .then(() => {
-        if (this.allPokemon) {
-          this.getAllPokemonData()
-          this.loadPokemonImages()
-        }
+
+    try {
+      this.initStore().then(() => {
+        return this.getAllPokemonData()
       })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
 }

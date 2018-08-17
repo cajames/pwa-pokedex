@@ -1,2 +1,4 @@
-// export const API_URL = 'http://localhost:3000'
-export const API_URL = 'https://offline-server-hpvmykiplb.now.sh'
+export const API_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://pokedex-server.xn--wxa.wtf"
+    : "http://localhost:3000";

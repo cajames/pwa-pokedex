@@ -4,12 +4,17 @@
   "description": "Offline app demo server",
   "main": "index.js",
   "scripts": {
-    "start": "json-server db.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "json-server db.js"
   },
   "author": "Chris James",
   "license": "ISC",
   "dependencies": {
     "json-server": "^0.12.1"
+  },
+  "engines": {
+    "node": "10.x.x"
+  },
+  "now": {
+    "alias": ["pokedex-server.xn--wxa.wtf"]
   }
 }

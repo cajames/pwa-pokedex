@@ -19,4 +19,4 @@ Note: The servers might take some time to warm up, they're offline while not bei
 
 ## Video Recording of Talk
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/NBMkHy4BZ6I?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+[![Building online apps for offline use - PWA - Chris A James](https://img.youtube.com/vi/NBMkHy4BZ6I/0.jpg)](https://www.youtube.com/watch?v=NBMkHy4BZ6I)

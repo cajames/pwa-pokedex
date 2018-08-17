@@ -1,18 +1,20 @@
-# frontend
+# Pokedex PWA - Frontend
 
-> Pokedex
+> PWA Frontend done from scratch
 
 ## Build Setup
 
 ``` bash
 # install dependencies
-npm install
+yarn
 
 # serve with hot reload at localhost:8080
-npm run dev
+yarn dev
 
 # build for production with minification
-npm run build
+yarn build
 ```
 
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Some useful notes
+
+- [Background Sync + Exponential backoff](https://notes.eellson.com/2018/02/11/chrome-the-background-sync-api-and-exponential-backoff/)
